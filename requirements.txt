@@ -4,3 +4,6 @@ torch
 cassandra-driver
 tqdm
 pyspark
+pyarrow
+grpcio
+google-api-python-client

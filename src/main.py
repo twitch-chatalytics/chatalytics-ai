@@ -40,7 +40,7 @@ def toxicity():
     df = twitch_messages_repository.fetch_twitch_messages()
 
     # Analyze toxicity
-    df['toxicity_score'] = toxicity_analyzer.predict_toxicity(df['message_text'].tolist(), batch_size=1000)
+    df['toxicity_score'] = toxicity_analyzer.predict_toxicity(df['message_text'].tolist())
 
     # Compute user toxicity
     toxicity_threshold = 0.5
@@ -58,5 +58,5 @@ def toxicity():
 
 
 if __name__ == "__main__":
-    emotion()
-    # toxicity()
+    # emotion()
+    toxicity()
