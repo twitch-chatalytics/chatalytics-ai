@@ -1,6 +1,6 @@
 from pyspark.sql.functions import sum as _sum
 
-from spark.util.cassandra import get_spark
+from src.spark.util.postgres import get_spark
 
 extra_jars = "com.datastax.spark:spark-cassandra-connector_2.12:3.4.1,com.github.jnr:jnr-posix:3.1.15"
 

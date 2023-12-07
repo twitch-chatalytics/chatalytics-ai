@@ -1,19 +1,26 @@
 from pyspark.ml.feature import Tokenizer, StopWordsRemover
 from pyspark.sql.functions import col, regexp_replace, lower
 
-from spark.util.cassandra import get_spark
-
-extra_jars = "com.datastax.spark:spark-cassandra-connector_2.12:3.4.1,com.github.jnr:jnr-posix:3.1.15"
+from src.spark.util.postgres import get_spark
 
 
 def main():
     spark = get_spark()
 
-    # Read data from Cassandra
+    # Read data from Postgres
     df = spark.read \
-        .format("org.apache.spark.sql.cassandra") \
-        .options(keyspace="twitch_messages", table="twitch_messages") \
+        .format("jdbc") \
+        .option("url", "jdbc:postgresql://192.168.1.217:5432/chatalytics") \
+        .option("dbtable", "twitch_message") \
+        .option("user", "user") \
+        .option("password", "password") \
+        .option("driver", "org.postgresql.Driver") \
         .load()
+
+    # df = spark.read \
+    #     .format("org.apache.spark.sql.cassandra") \
+    #     .options(keyspace="twitch", table="twitch_messages") \
+    #     .load()
 
     # Convert text to lowercase
     twitch_messages = df.withColumn("message_text", lower(col("message_text")))
@@ -32,11 +39,13 @@ def main():
 
     twitch_messages.printSchema()
 
-    twitch_messages.write \
-        .format("org.apache.spark.sql.cassandra") \
-        .mode('append') \
-        .options(keyspace="spark_output", table="twitch_messages_") \
-        .save()
+    twitch_messages.show(truncate=False, vertical=True)
+
+    # twitch_messages.write \
+    #     .format("org.apache.spark.sql.cassandra") \
+    #     .mode('append') \
+    #     .options(keyspace="spark_output", table="twitch_messages_") \
+    #     .save()
 
     spark.stop()
 
