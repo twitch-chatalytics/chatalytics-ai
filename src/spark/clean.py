@@ -1,7 +1,7 @@
 from pyspark.ml.feature import Tokenizer, StopWordsRemover
 from pyspark.sql.functions import col, regexp_replace, lower
 
-from src.spark.util.postgres import get_spark
+from util.postgres import get_spark
 
 
 def main():
@@ -37,15 +37,17 @@ def main():
     remover = StopWordsRemover(inputCol="words", outputCol="filtered_words")
     twitch_messages = remover.transform(twitch_messages)
 
-    twitch_messages.printSchema()
+    twitch_messages.write \
+        .format("jdbc") \
+        .mode('append') \
+        .option("url", "jdbc:postgresql://192.168.1.217:5432/chatalytics") \
+        .option("user", "user") \
+        .option("password", "password") \
+        .option("driver", "org.postgresql.Driver") \
+        .option("dbtable", "spark_message_output") \
+        .save()
 
-    twitch_messages.show(truncate=False, vertical=True)
-
-    # twitch_messages.write \
-    #     .format("org.apache.spark.sql.cassandra") \
-    #     .mode('append') \
-    #     .options(keyspace="spark_output", table="twitch_messages_") \
-    #     .save()
+    print("SPARK DONE")
 
     spark.stop()
 
