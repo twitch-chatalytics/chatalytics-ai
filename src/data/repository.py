@@ -3,7 +3,7 @@ import psycopg2
 from numpy import int64
 
 
-class TwitchMessagesRepository:
+class Repository:
 
     def __init__(self):
         self.connection = psycopg2.connect(

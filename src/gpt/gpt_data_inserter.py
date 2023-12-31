@@ -1,21 +1,18 @@
-import logging
 from tqdm import tqdm
 
 
-class EmotionDataInserter:
-
+class GPTDataInserter:
     def __init__(self, repository):
         self.repository = repository
 
     def insert_emotion_report(self, data, query):
         print("Starting data insertion into the database...")
 
-        with tqdm(total=len(data), desc="Inserting data") as pbar:
+        with tqdm(total=len(data), desc="Inserting data", colour='green') as pbar:
             for index, row in data.iterrows():
 
                 parameters = (
-                    row.message_id, row.owner_id, row.viewer, row.sadness, row.joy, row.love, row.anger, row.fear,
-                    row.surprise
+
                 )
 
                 try:

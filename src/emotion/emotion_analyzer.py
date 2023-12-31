@@ -6,33 +6,15 @@ from utils.preprocess_text import preprocess_text
 
 
 class EmotionAnalyzer:
-    """
-    Emotion Analyzer class to predict emotions in text messages using a pre-trained model.
-    """
 
     def __init__(self, model_name="bhadresh-savani/distilbert-base-uncased-emotion"):
-        """
-        Initializes the EmotionAnalyzer with the specified model.
-
-        Args:
-            model_name (str): Name of the pre-trained model to use.
-        """
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForSequenceClassification.from_pretrained(model_name)
         self.model.to(self.device)
 
     def predict_emotions(self, messages, batch_size=32):
-        """
-        Predicts emotions in a list of messages.
 
-        Args:
-            messages (list of str): List of text messages to analyze.
-            batch_size (int): The size of the batch for processing messages.
-
-        Returns:
-            list: A list of emotion prediction results.
-        """
         results = []
         total_batches = len(messages) // batch_size + (0 if len(messages) % batch_size == 0 else 1)
 
