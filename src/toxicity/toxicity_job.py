@@ -10,7 +10,13 @@ class ToxicityAnalysisJob:
         self.toxicity_analyzer = ToxicityAnalyzer()
         self.data_inserter = ToxicityDataInserter(repository)
 
-    def process(self, df):
+    def process(self, last_run_time):
+        df = self.repository.fetch_twitch_messages(last_run_time)
+
+        if df.empty:
+            print("No new messages to process.")
+            return
+
         df['toxicity_score'] = self.toxicity_analyzer.predict_toxicity(df['message_text'].tolist())
 
         toxicity_threshold = 0.5

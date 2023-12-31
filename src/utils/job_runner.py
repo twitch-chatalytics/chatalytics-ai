@@ -25,12 +25,6 @@ class JobRunner:
         if last_run_time is None:
             last_run_time = job_start_time - timedelta(minutes=1)
 
-        df = self.repository.fetch_twitch_messages(last_run_time)
-
-        if df.empty:
-            print("No new messages to process.")
-            return
-
-        job.process(df)
+        job.process(last_run_time)
 
         self.update_last_run_timestamp(job_start_time)

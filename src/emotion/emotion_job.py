@@ -11,8 +11,14 @@ class EmotionAnalysisJob:
         self.emotion_analyzer = EmotionAnalyzer()
         self.data_inserter = EmotionDataInserter(repository)
 
-    def process(self, df):
-        print("Processing EmotionAnalysisJob Twitch messages...")
+    def process(self, last_run_time):
+        print("Processing EmotionAnalysisJob...")
+
+        df = self.repository.fetch_twitch_messages(last_run_time)
+
+        if df.empty:
+            print("No new messages to process.")
+            return
 
         try:
             emotion_scores = self.emotion_analyzer.predict_emotions(df['message_text'].tolist())

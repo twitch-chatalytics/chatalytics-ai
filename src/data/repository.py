@@ -53,5 +53,27 @@ class Repository:
 
         return pd.DataFrame(rows, columns=['id', 'owner_id', 'viewer', 'message_text', 'timestamp'])
 
+    def get_emotional_trends_over_time(self, owner_id):
+        with self.connection.cursor() as cursor:
+            query = """
+            SELECT DATE(tm.timestamp) AS message_date,
+               AVG(smer.sadness)  AS avg_sadness,
+               AVG(smer.joy)      AS avg_joy,
+               AVG(smer.love)     AS avg_love,
+               AVG(smer.anger)    AS avg_anger,
+               AVG(smer.fear)     AS avg_fear,
+               AVG(smer.surprise) AS avg_surprise
+            FROM twitch.twitch_message tm
+                     JOIN
+                 twitch.spark_message_emotion_ranking smer ON tm.id = smer.message_id
+            WHERE tm.owner_id = %s
+            GROUP BY message_date
+            ORDER BY message_date;
+            """
+            cursor.execute(query, (owner_id,))
+            rows = cursor.fetchall()
+
+        return pd.DataFrame(rows, columns=['message_date', 'avg_sadness', 'avg_joy', 'avg_love', 'avg_anger', 'avg_fear', 'avg_surprise'])
+
     def __del__(self):
         self.connection.close()
