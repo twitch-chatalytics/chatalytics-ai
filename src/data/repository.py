@@ -19,6 +19,29 @@ class Repository:
         with self.connection.cursor() as cursor:
             cursor.execute(query, parameters)
 
+    def get_twitch_users(self):
+        with self.connection.cursor() as cursor:
+            query = """
+            SELECT * 
+            FROM twitch.twitch_user
+            """
+            cursor.execute(query, )
+            rows = cursor.fetchall()
+
+        return pd.DataFrame(rows, columns=[
+            'id',
+            'user_id',
+            'login',
+            'display_name',
+            'type',
+            'broadcaster_type',
+            'description',
+            'profile_image_url',
+            'offline_image_url',
+            'created_date',
+            'last_modified_date'
+        ])
+
     def get_last_run_timestamp(self, job_type):
         with self.connection.cursor() as cursor:
             query = """
@@ -53,6 +76,17 @@ class Repository:
 
         return pd.DataFrame(rows, columns=['id', 'owner_id', 'viewer', 'message_text', 'timestamp'])
 
+    def fetch_all_twitch_messages(self):
+        with self.connection.cursor() as cursor:
+            query = """
+            SELECT * 
+            FROM twitch.twitch_message;
+            """
+            cursor.execute(query, )
+            rows = cursor.fetchall()
+
+        return pd.DataFrame(rows, columns=['id', 'owner_id', 'viewer', 'message_text', 'timestamp'])
+
     def get_emotional_trends_over_time(self, owner_id):
         with self.connection.cursor() as cursor:
             query = """
@@ -73,7 +107,9 @@ class Repository:
             cursor.execute(query, (owner_id,))
             rows = cursor.fetchall()
 
-        return pd.DataFrame(rows, columns=['message_date', 'avg_sadness', 'avg_joy', 'avg_love', 'avg_anger', 'avg_fear', 'avg_surprise'])
+        return pd.DataFrame(rows,
+                            columns=['message_date', 'avg_sadness', 'avg_joy', 'avg_love', 'avg_anger', 'avg_fear',
+                                     'avg_surprise'])
 
     def __del__(self):
         self.connection.close()

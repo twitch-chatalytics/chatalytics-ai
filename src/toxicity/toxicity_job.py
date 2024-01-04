@@ -25,5 +25,5 @@ class ToxicityAnalysisJob:
             toxic_message_count=('toxicity_score', lambda x: (x > toxicity_threshold).sum())
         )
 
-        insert_query = "INSERT INTO twitch.spark_message_toxicity_report (viewer, average_toxicity, toxic_message_count) VALUES (%s, %s, %s)"
+        insert_query = "INSERT INTO emote.spark_message_toxicity_report (viewer, average_toxicity, toxic_message_count) VALUES (%s, %s, %s)"
         self.data_inserter.insert_toxicity_report(user_toxicity, insert_query)
