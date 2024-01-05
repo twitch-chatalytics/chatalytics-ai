@@ -13,7 +13,7 @@ class EmoteDataInserter:
         with tqdm(total=len(data), desc="Inserting data") as pbar:
             for index, row in data.iterrows():
 
-                parameters = (row['emote'], row['image_link'], row['count'], row['owner_id'])
+                parameters = (row['emote'], row['image_link'], row['count'], row['streamer_id'])
 
                 try:
                     self.repository.write(query, parameters)

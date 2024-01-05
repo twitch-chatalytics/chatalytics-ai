@@ -74,7 +74,7 @@ class Repository:
             cursor.execute(query, (last_run_time,))
             rows = cursor.fetchall()
 
-        return pd.DataFrame(rows, columns=['id', 'owner_id', 'viewer', 'message_text', 'timestamp'])
+        return pd.DataFrame(rows, columns=['id', 'streamer_id', 'viewer', 'message_text', 'timestamp'])
 
     def fetch_all_twitch_messages(self):
         with self.connection.cursor() as cursor:
@@ -85,9 +85,9 @@ class Repository:
             cursor.execute(query, )
             rows = cursor.fetchall()
 
-        return pd.DataFrame(rows, columns=['id', 'owner_id', 'viewer', 'message_text', 'timestamp'])
+        return pd.DataFrame(rows, columns=['id', 'streamer_id', 'viewer', 'message_text', 'timestamp'])
 
-    def get_emotional_trends_over_time(self, owner_id):
+    def get_emotional_trends_over_time(self, streamer_id):
         with self.connection.cursor() as cursor:
             query = """
             SELECT DATE(tm.timestamp) AS message_date,
@@ -100,11 +100,11 @@ class Repository:
             FROM twitch.twitch_message tm
                      JOIN
                  twitch.spark_message_emotion_ranking smer ON tm.id = smer.message_id
-            WHERE tm.owner_id = %s
+            WHERE tm.streamer_id = %s
             GROUP BY message_date
             ORDER BY message_date;
             """
-            cursor.execute(query, (owner_id,))
+            cursor.execute(query, (streamer_id,))
             rows = cursor.fetchall()
 
         return pd.DataFrame(rows,

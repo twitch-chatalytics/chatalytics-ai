@@ -26,12 +26,12 @@ class EmotionAnalysisJob:
 
             emotions_df = pd.DataFrame(emotion_scores, columns=emotion_labels)
             emotions_df['message_id'] = df['id']
-            emotions_df['owner_id'] = df['owner_id']
+            emotions_df['streamer_id'] = df['streamer_id']
             emotions_df['viewer'] = df['viewer']
 
             insert_query = """
                 INSERT INTO twitch.spark_message_emotion_ranking (
-                    message_id, owner_id, viewer, sadness, joy, love, anger, fear, surprise
+                    message_id, streamer_id, viewer, sadness, joy, love, anger, fear, surprise
                 ) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (message_id) 

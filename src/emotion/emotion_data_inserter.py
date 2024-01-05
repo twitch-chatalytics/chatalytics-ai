@@ -14,7 +14,7 @@ class EmotionDataInserter:
             for index, row in data.iterrows():
 
                 parameters = (
-                    row.message_id, row.owner_id, row.viewer, row.sadness, row.joy, row.love, row.anger, row.fear,
+                    row.message_id, row.streamer_id, row.viewer, row.sadness, row.joy, row.love, row.anger, row.fear,
                     row.surprise
                 )
 

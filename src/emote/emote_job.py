@@ -38,7 +38,7 @@ class EmoteAnalysisJob:
                 all_emotes = {**twitch_emotes, **streamer_custom_emotes}
 
                 # Filter messages for the current user
-                user_messages = messages_df[messages_df['owner_id'] == user['user_id']]
+                user_messages = messages_df[messages_df['streamer_id'] == user['user_id']]
 
                 # Analyze emote usage in messages
                 # Assuming all_emotes is a list of dictionaries as per the provided structure
@@ -55,17 +55,17 @@ class EmoteAnalysisJob:
                         'emote': emote_name,
                         'image_link': image_link,
                         'count': emote_count,
-                        'owner_id': user['user_id']
+                        'streamer_id': user['user_id']
                     })
 
             emote_usage_df = pd.DataFrame(emote_rows)
 
             insert_query = """
                 INSERT INTO twitch.spark_emote_usage (
-                    emote, image_link, count, owner_id
+                    emote, image_link, count, streamer_id
                 ) 
                 VALUES (%s, %s, %s, %s)
-                ON CONFLICT (emote, owner_id) 
+                ON CONFLICT (emote, streamer_id) 
                 DO UPDATE SET 
                     count = twitch.spark_emote_usage.count + EXCLUDED.count;
             """
