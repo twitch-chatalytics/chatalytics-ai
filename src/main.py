@@ -9,7 +9,7 @@ if __name__ == "__main__":
     repository = Repository()
 
     # Choose which job to run: 'emotion_analysis', 'toxicity_analysis', 'gpt_analysis', 'emote_analysis'
-    chosen_job = 'emotion_analysis'
+    chosen_job = 'emote_analysis'
 
     if chosen_job == 'emotion_analysis':
         job = EmotionAnalysisJob(repository)

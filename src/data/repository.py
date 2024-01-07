@@ -19,11 +19,11 @@ class Repository:
         with self.connection.cursor() as cursor:
             cursor.execute(query, parameters)
 
-    def get_twitch_users(self):
+    def get_twitch_streamers(self):
         with self.connection.cursor() as cursor:
             query = """
             SELECT * 
-            FROM twitch.twitch_user
+            FROM twitch.twitch_streamer
             """
             cursor.execute(query, )
             rows = cursor.fetchall()
@@ -74,7 +74,7 @@ class Repository:
             cursor.execute(query, (last_run_time,))
             rows = cursor.fetchall()
 
-        return pd.DataFrame(rows, columns=['id', 'streamer_id', 'viewer', 'message_text', 'timestamp'])
+        return pd.DataFrame(rows, columns=['id', 'streamer_id', 'viewer_id', 'message_text', 'timestamp'])
 
     def fetch_all_twitch_messages(self):
         with self.connection.cursor() as cursor:
@@ -85,7 +85,7 @@ class Repository:
             cursor.execute(query, )
             rows = cursor.fetchall()
 
-        return pd.DataFrame(rows, columns=['id', 'streamer_id', 'viewer', 'message_text', 'timestamp'])
+        return pd.DataFrame(rows, columns=['id', 'streamer_id', 'viewer_id', 'message_text', 'timestamp'])
 
     def get_emotional_trends_over_time(self, streamer_id):
         with self.connection.cursor() as cursor:

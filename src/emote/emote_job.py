@@ -16,8 +16,8 @@ class EmoteAnalysisJob:
     def process(self, last_run_time):
         print("Processing EmoteAnalysisJob...")
 
-        user_df = self.repository.get_twitch_users()
-        messages_df = self.repository.fetch_all_twitch_messages()
+        user_df = self.repository.get_twitch_streamers()
+        messages_df = self.repository.fetch_twitch_messages(last_run_time)
 
         if messages_df.empty:
             print("No new messages to process.")
